@@ -109,7 +109,7 @@
 </head>
 <body>
   <section class="calculator">
-    <h1>Final Exam Grade Calculator</h1>
+    <h1>NU 144 Final Exam Grade Calculator</h1>
     <p>Enter your current points and class totals, then see what score you need on the remaining exam points to pass.</p>
 
     <div class="field">
@@ -158,7 +158,7 @@
       const earned = parseFloat(rawEarned);
       const totalPoints = 844;
       const passThreshold = totalPoints * 0.8;
-      const assignmentPoints = 20;
+      const assignmentPoints = 19;
 
       if (Number.isNaN(earned)) {
         showResult('Please fill in your current earned points with a valid number.', true);
@@ -176,11 +176,11 @@
       const finalNeeded = formatValue(Math.max(0, x - 80));
 
       if (x <= 0) {
-        showResult('You will get 20-23 points on the last week of assignments. You already have enough points on your last 2 tests to be <strong><u>1/2 RN</u></strong>.');
+        showResult('You will get 19 points on the last week of assignments. You already have enough points on your last 2 tests to be <strong><u>1/2 RN</u></strong>.');
         return;
       }
 
-      showResult(`You will get 20-23 points on the last week of assignments. You need ${x} more points on your last 2 tests to be <strong><u>1/2 RN</u></strong>.\n\nThat means averaging ${averagePerTest} points per 100-point test. If you get an 80 on the next test you will need ${finalNeeded} on the final.`);
+      showResult(`You will get 19 points on the last week of assignments. You need ${x} more points on your last 2 tests to be <strong><u>1/2 RN</u></strong>.\n\nThat means averaging ${averagePerTest} points per 100-point test. If you get an 80 on the next test you will need ${finalNeeded} on the final.`);
     }
 
     calculateBtn.addEventListener('click', calculateNeededScore);

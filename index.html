@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Final Exam Grade Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f6fb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .calculator {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+      padding: 32px;
+      width: min(420px, calc(100vw - 32px));
+    }
+
+    .calculator h1 {
+      margin-top: 0;
+      font-size: 24px;
+      color: #111827;
+    }
+
+    .calculator p {
+      color: #4b5563;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      min-height: 48px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Improve tap behavior on mobile */
+    button, .field input { -webkit-tap-highlight-color: rgba(0,0,0,0.08); touch-action: manipulation; }
+
+    button.calculate {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    button.reset {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .result {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px;
+      line-height: 1.7;
+      min-height: 76px;
+      white-space: pre-wrap;
+    }
+
+    .result strong {
+      color: #111827;
+    }
+
+    .error {
+      color: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+  <section class="calculator">
+    <h1>Final Exam Grade Calculator</h1>
+    <p>Enter your current points and class totals, then see what score you need on the remaining exam points to pass.</p>
+
+    <div class="field">
+      <label for="currentEarned">Current points earned</label>
+      <input id="currentEarned" type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" autocomplete="off" placeholder="e.g. 72.5" />
+    </div>
+
+    <div class="field">
+      <label>Total points available for the class</label>
+      <input id="totalClassPoints" type="text" value="844" readonly />
+    </div>
+
+    <div class="field">
+      <label>Passing percentage goal</label>
+      <input type="text" value="80%" readonly />
+    </div>
+
+    <div class="buttons">
+      <button type="button" class="calculate" id="calculateBtn">Calculate</button>
+      <button type="button" class="reset" id="resetBtn">Reset</button>
+    </div>
+
+    <div class="result" id="resultBox">
+      Enter your scores and click Calculate.
+    </div>
+  </section>
+
+  <script>
+    const currentEarned = document.getElementById('currentEarned');
+    const totalClassPoints = document.getElementById('totalClassPoints');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultBox = document.getElementById('resultBox');
+
+    function formatValue(value) {
+      return Number(value.toFixed(2));
+    }
+
+    function showResult(message, isError = false) {
+      resultBox.innerHTML = message;
+      resultBox.classList.toggle('error', isError);
+    }
+
+    function calculateNeededScore() {
+      const rawEarned = (currentEarned.value || '').trim().replace(',', '.');
+      const earned = parseFloat(rawEarned);
+      const totalPoints = 844;
+      const passThreshold = totalPoints * 0.8;
+      const assignmentPoints = 20;
+
+      if (Number.isNaN(earned)) {
+        showResult('Please fill in your current earned points with a valid number.', true);
+        return;
+      }
+
+      if (earned < 0 || earned > totalPoints) {
+        showResult('Current points earned must be between 0 and 844.', true);
+        return;
+      }
+
+      const pointsAfterAssignments = earned + assignmentPoints;
+      const x = formatValue(Math.max(0, passThreshold - pointsAfterAssignments));
+      const averagePerTest = formatValue(x / 2);
+      const finalNeeded = formatValue(Math.max(0, x - 80));
+
+      if (x <= 0) {
+        showResult('You will get 20-23 points on the last week of assignments. You already have enough points on your last 2 tests to be <strong><u>1/2 RN</u></strong>.');
+        return;
+      }
+
+      showResult(`You will get 20-23 points on the last week of assignments. You need ${x} more points on your last 2 tests to be <strong><u>1/2 RN</u></strong>.\n\nThat means averaging ${averagePerTest} points per 100-point test. If you get an 80 on the next test you will need ${finalNeeded} on the final.`);
+    }
+
+    calculateBtn.addEventListener('click', calculateNeededScore);
+    resetBtn.addEventListener('click', () => {
+      currentEarned.value = '';
+      showResult('Enter your scores and click Calculate.');
+    });
+  </script>
+</body>
+</html>

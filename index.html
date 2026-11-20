@@ -145,10 +145,6 @@
         <input id="current-points" name="current-points" type="number" min="0" step="any" placeholder="0" inputmode="decimal">
       </div>
       <div>
-        <label for="mod6">Mod 6 Exam <span>up to 100 points</span></label>
-        <input id="mod6" name="mod6" type="number" min="0" max="100" step="any" placeholder="0" inputmode="decimal">
-      </div>
-      <div>
         <label for="final-exam">Final Exam <span>up to 100 points</span></label>
         <input id="final-exam" name="final-exam" type="number" min="0" max="100" step="any" placeholder="0" inputmode="decimal">
       </div>
@@ -158,11 +154,11 @@
       </div>
     </form>
 
-    <p class="note">The course has 697 total points. The calculator includes the guaranteed 19 assignment points. Enter exam points earned or expected; blank fields count as 0.</p>
+    <p class="note">The course has 702 total points. The calculator includes the guaranteed 19 assignment points. Enter exam points earned or expected; blank fields count as 0.</p>
 
     <section class="result" aria-live="polite">
       <h2>Points still needed for an 80% final grade</h2>
-      <div class="value" id="points-needed">538.6 points</div>
+      <div class="value" id="points-needed">542.6 points</div>
       <p class="status" id="status"></p>
     </section>
   </main>
@@ -172,7 +168,8 @@
     const inputs = [...form.querySelectorAll("input")];
     const pointsNeeded = document.getElementById("points-needed");
     const status = document.getElementById("status");
-    const targetPoints = 697 * 0.8;
+    const courseTotalPoints = 702;
+    const targetPoints = courseTotalPoints * 0.8;
     const guaranteedAssignmentPoints = 19;
 
     function updateCalculator() {
@@ -191,14 +188,14 @@
 
       const enteredPoints = inputs.reduce((total, input) => total + (Number(input.value) || 0), 0);
       const needed = Math.max(0, targetPoints - guaranteedAssignmentPoints - enteredPoints);
-      const projectedPercentage = ((enteredPoints + guaranteedAssignmentPoints) / 697) * 100;
+      const projectedPercentage = ((enteredPoints + guaranteedAssignmentPoints) / courseTotalPoints) * 100;
 
       pointsNeeded.textContent = `${needed.toFixed(1)} points`;
       status.textContent = enteredPoints + guaranteedAssignmentPoints > targetPoints
         ? `Your projected final grade is ${projectedPercentage.toFixed(1)}%.`
         : needed === 0
           ? "You have reached the 80% point target."
-          : `80% of 697 points is ${targetPoints.toFixed(1)} points.`;
+          : `80% of ${courseTotalPoints} points is ${targetPoints.toFixed(1)} points.`;
       status.classList.remove("error");
     }
 
